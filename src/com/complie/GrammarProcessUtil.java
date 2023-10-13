@@ -7,67 +7,67 @@ import javafx.scene.control.TextArea;
 
 public class GrammarProcessUtil {
     /**
-     * æ–‡æ³•
+     * ÎÄ·¨
      */
     private static final String[] grammarRules = {
-            "Eâ†’TE'",
-            "E'â†’+TE'|-TE'|Îµ",
-            "Tâ†’FT'",
-            "T'â†’*FT'|/FT'|Îµ",
-            "Fâ†’(E)|i",
-            "iâ†’1i|2i|3i|4i|5i|6i|7i|8i|9i|i0|Îµ"
+            "E¡úTE'",
+            "E'¡ú+TE'|-TE'|¦Å",
+            "T¡úFT'",
+            "T'¡ú*FT'|/FT'|¦Å",
+            "F¡ú(E)|i",
+            "i¡ú1i|2i|3i|4i|5i|6i|7i|8i|9i|i0|¦Å"
     };
     /**
-     * äº§ç”Ÿå¼çš„åˆ†éš”ç¬¦
+     * ²úÉúÊ½µÄ·Ö¸ô·û
      */
-    private static final String SEPARATOR = "â†’";
+    private static final String SEPARATOR = "¡ú";
     /**
-     * ä¿å­˜éç»ˆç»“ç¬¦åœ¨ vnListä¸­çš„ä½ç½®
+     * ±£´æ·ÇÖÕ½á·ûÔÚ vnListÖĞµÄÎ»ÖÃ
      */
     private static final Map<String,Integer> vnMap = new HashMap<>();
 
     /**
-     * ä¿å­˜ç»ˆç»“ç¬¦åœ¨ vtList ä¸­çš„ä½ç½®
+     * ±£´æÖÕ½á·ûÔÚ vtList ÖĞµÄÎ»ÖÃ
      */
     private static final Map<String,Integer> vtMap = new HashMap<>();
 
     /**
-     * ä¿å­˜éç»ˆç»“ç¬¦çš„äº§ç”Ÿå¼
+     * ±£´æ·ÇÖÕ½á·ûµÄ²úÉúÊ½
      */
     private static final Map<String,List<String>> productionMap = new HashMap<>();
 
     /**
-     * éç»ˆç»“ç¬¦é›†
+     * ·ÇÖÕ½á·û¼¯
      */
     private static final List<String> vnList = new ArrayList<>();
 
     /**
-     * ç»ˆç»“ç¬¦é›†
+     * ÖÕ½á·û¼¯
      */
     private static final List<String> vtList = new ArrayList<>();
 
     /**
-     * åˆ†æè¡¨
+     * ·ÖÎö±í
      */
     private static String[][] table = null;
 
     /**
-     * å€™é€‰å¼çš„åˆ†éš”ç¬¦
+     * ºòÑ¡Ê½µÄ·Ö¸ô·û
      */
     private static final String CANDIDATE_SEPARATOR = "|";
 
     /**
-     * ç©ºä¸²
+     * ¿Õ´®
      */
-    private static final String BLANK_STRING = "Îµ";
+    private static final String BLANK_STRING = "¦Å";
 
     /**
-     * FIRSTé›†
+     * FIRST¼¯
      */
     private static final Map<String, Set<String>> first = new HashMap<>();
 
     /**
-     * FOLLOWé›†
+     * FOLLOW¼¯
      */
     private static final Map<String,Set<String>> follow = new HashMap<>();
 
@@ -87,15 +87,15 @@ public class GrammarProcessUtil {
                 productionMap.put(left,splitBySeparator(right));
             }
         }
-        // è·å–éç»ˆç»“ç¬¦é›†
+        // »ñÈ¡·ÇÖÕ½á·û¼¯
         for(String vn:vnList) {
-            // è·å–éç»ˆç»“ç¬¦äº§ç”Ÿå¼çš„å³éƒ¨çš„å€™é€‰å¼
+            // »ñÈ¡·ÇÖÕ½á·û²úÉúÊ½µÄÓÒ²¿µÄºòÑ¡Ê½
             List<String> vnRight = productionMap.get(vn);
             for(String right:vnRight) {
-                // å°†ä¸€ä¸ªä¸ªå€™é€‰å¼æ‹†åˆ†æˆå­—ç¬¦ï¼ˆå¤„ç†ç±»ä¼¼ E â†’ S'açš„æƒ…å†µï¼‰
+                // ½«Ò»¸ö¸öºòÑ¡Ê½²ğ·Ö³É×Ö·û£¨´¦ÀíÀàËÆ E ¡ú S'aµÄÇé¿ö£©
                 List<String> characters = getCharacter(right);
                 for(String c:characters) {
-                    // ä¸æ˜¯éç»ˆç»“ç¬¦ ä¸” æœªæ›¾åŠ å…¥åˆ°è¿‡ ç»ˆç»“ç¬¦é›†
+                    // ²»ÊÇ·ÇÖÕ½á·û ÇÒ Î´Ôø¼ÓÈëµ½¹ı ÖÕ½á·û¼¯
                     if(!vnMap.containsKey(c) && !vtMap.containsKey(c)
                             && !CANDIDATE_SEPARATOR.equals(c)) {
                         vtMap.put(c,vtList.size());
@@ -104,42 +104,42 @@ public class GrammarProcessUtil {
                 }
             }
         }
-        // æ‰“å°ç»ˆç»“ç¬¦é›† ä¸ éç»ˆç»“ç¬¦é›†
+        // ´òÓ¡ÖÕ½á·û¼¯ Óë ·ÇÖÕ½á·û¼¯
 
 //        Platform.runLater(() -> {
-//            outputArea.appendText("\nç»ˆç»“ç¬¦ï¼š" + vtList);
-//            outputArea.appendText("\néç»ˆç»“ç¬¦ï¼š" + vnList);
+//            outputArea.appendText("\nÖÕ½á·û£º" + vtList);
+//            outputArea.appendText("\n·ÇÖÕ½á·û£º" + vnList);
 //        });
-        System.out.println("ç»ˆç»“ç¬¦ï¼š" + vtList);
-        System.out.println("éç»ˆç»“ç¬¦ï¼š" + vnList);
-        // è·å–FIRSTé›†
+        System.out.println("ÖÕ½á·û£º" + vtList);
+        System.out.println("·ÇÖÕ½á·û£º" + vnList);
+        // »ñÈ¡FIRST¼¯
         initFirst();
-        // æ‰“å°FIRSTé›†
+        // ´òÓ¡FIRST¼¯
         printFirst();
-        // è·å–FOLLOWé›†
+        // »ñÈ¡FOLLOW¼¯
         initFollow();
-        // æ‰“å°FOLLOWé›†
+        // ´òÓ¡FOLLOW¼¯
         printFollow();
-        // è·å–åˆ†æè¡¨
+        // »ñÈ¡·ÖÎö±í
         getTable();
-        // æ‰“å°åˆ†æè¡¨
+        // ´òÓ¡·ÖÎö±í
         printTable();
 
     }
 
     /**
-     * å°†äº§ç”Ÿå¼æŒ‰ç…§å€™é€‰å¼çš„åˆ†éš”ç¬¦è¿›è¡Œåˆ†å‰²
-     * ä¾‹ï¼šstr:"E'a|Îµ" => ["E'a","Îµ"]
-     *    str:â€œE'a" => ["E'a"]
+     * ½«²úÉúÊ½°´ÕÕºòÑ¡Ê½µÄ·Ö¸ô·û½øĞĞ·Ö¸î
+     * Àı£ºstr:"E'a|¦Å" => ["E'a","¦Å"]
+     *    str:¡°E'a" => ["E'a"]
      */
     private static List<String> splitBySeparator(String str) {
         List<String> ans = new ArrayList<>();
         if(!str.contains(CANDIDATE_SEPARATOR)) {
-            // ä¸åŒ…å«åˆ†éš”ç¬¦ï¼Œä¸å¯åˆ†å‰²
+            // ²»°üº¬·Ö¸ô·û£¬²»¿É·Ö¸î
             ans.add(str);
             return ans;
         } else {
-            // åŒ…å«åˆ†éš”ç¬¦ï¼Œè¿›è¡Œåˆ†å‰²
+            // °üº¬·Ö¸ô·û£¬½øĞĞ·Ö¸î
             String[] split = str.split("\\|");
             Collections.addAll(ans,split);
             return ans;
@@ -147,9 +147,9 @@ public class GrammarProcessUtil {
     }
 
     /**
-     * å°†å­—ç¬¦ä¸²åˆ†å‰²æˆä¸€ä¸ªä¸ªå­—ç¬¦
-     * æ³¨ï¼šä¸»è¦æ˜¯å¤„ç†å¸¦å•å¼•å·çš„å­—ç¬¦
-     * ä¾‹ï¼šstr:"E'aT" => ["E'","a","T"]
+     * ½«×Ö·û´®·Ö¸î³ÉÒ»¸ö¸ö×Ö·û
+     * ×¢£ºÖ÷ÒªÊÇ´¦Àí´øµ¥ÒıºÅµÄ×Ö·û
+     * Àı£ºstr:"E'aT" => ["E'","a","T"]
      */
     private static List<String> getCharacter(String str) {
         List<String> ans = new ArrayList<>();
@@ -167,8 +167,8 @@ public class GrammarProcessUtil {
     }
 
     /**
-     * åˆ¤æ–­å­—ç¬¦ä¸²stræ˜¯å¦å®Œå…¨åŒ…å« regexï¼Œè¿”å›ä¸‹æ ‡
-     * ä¾‹ï¼šstr:"aEb",regex="E" => 1
+     * ÅĞ¶Ï×Ö·û´®strÊÇ·ñÍêÈ«°üº¬ regex£¬·µ»ØÏÂ±ê
+     * Àı£ºstr:"aEb",regex="E" => 1
      *    str:"aE'b",regex="E" => -1
      *    str:"aE'b",regex="E'" => 1
      */
@@ -188,12 +188,12 @@ public class GrammarProcessUtil {
                 }
             }
         } else {
-            throw new UnsupportedOperationException("int contains(String str,String regex):regexé•¿åº¦åªæ”¯æŒ1æˆ–2");
+            throw new UnsupportedOperationException("int contains(String str,String regex):regex³¤¶ÈÖ»Ö§³Ö1»ò2");
         }
         return -1;
     }
 
-    /*åˆ¤æ–­ç»™å®šçš„ç¬¦å· vt æ˜¯å¦ä¸ºç»ˆç»“ç¬¦*/
+    /*ÅĞ¶Ï¸ø¶¨µÄ·ûºÅ vt ÊÇ·ñÎªÖÕ½á·û*/
     public boolean containsVt(String vt) {
         if("#".equals(vt))
             return false;
@@ -201,7 +201,7 @@ public class GrammarProcessUtil {
     }
 
     private static void printFirst() {
-        System.out.println("\nFIRSTé›†åˆï¼š");
+        System.out.println("\nFIRST¼¯ºÏ£º");
         for(String vn:vnList) {
             Set<String> strings = first.get(vn);
             StringBuilder sb = new StringBuilder();
@@ -218,7 +218,7 @@ public class GrammarProcessUtil {
     }
 
     private static void printFollow() {
-        System.out.println("\nFOLLOWé›†åˆï¼š");
+        System.out.println("\nFOLLOW¼¯ºÏ£º");
         for(String vn:vnList) {
             Set<String> strings = follow.get(vn);
             StringBuilder sb = new StringBuilder();
@@ -236,7 +236,7 @@ public class GrammarProcessUtil {
 
     private static void printTable() {
         int blankIndex = vtMap.getOrDefault(BLANK_STRING,-1);
-        System.out.print("\né¢„æµ‹åˆ†æè¡¨ï¼š\n");
+        System.out.print("\nÔ¤²â·ÖÎö±í£º\n");
         for(int i = 0; i < vtList.size(); i++) {
             if(i != blankIndex) {
                 System.out.print("\t\t  " + vtList.get(i));
@@ -256,7 +256,7 @@ public class GrammarProcessUtil {
     }
 
     /**
-     * åˆå§‹åŒ–FIRSTé›†
+     * ³õÊ¼»¯FIRST¼¯
      */
     private static void initFirst() {
         for(String vn:vnList) {
@@ -265,29 +265,29 @@ public class GrammarProcessUtil {
     }
 
     /**
-     * è·å–FIRSTSé›†
+     * »ñÈ¡FIRSTS¼¯
      */
     private static Set<String> getFirst(String vn) {
         if(first.containsKey(vn)) {
             return first.get(vn);
         }
         Set<String> set = new HashSet<>();
-        // å°†å½“å‰éç»ˆç»“ç¬¦æ ‡è®°ä¸ºå·²è®¡ç®—
+        // ½«µ±Ç°·ÇÖÕ½á·û±ê¼ÇÎªÒÑ¼ÆËã
         first.put(vn, set);
 
-        // éå†äº§ç”Ÿå¼çš„å³éƒ¨çš„å€™é€‰å¼
+        // ±éÀú²úÉúÊ½µÄÓÒ²¿µÄºòÑ¡Ê½
         List<String> vnRight = productionMap.get(vn);
         for(String right:vnRight) {
             int index = 0;
-            // å€™é€‰å¼çš„ç¬¬ä¸€ä¸ªå­—ç¬¦
+            // ºòÑ¡Ê½µÄµÚÒ»¸ö×Ö·û
             String firstCharacter = String.valueOf(right.charAt(index++));
             if (vtMap.containsKey(firstCharacter)) {
-                // æ»¡è¶³ Eâ†’a...,aåŠ å…¥FIRSTé›†
+                // Âú×ã E¡úa...,a¼ÓÈëFIRST¼¯
                 set.add(firstCharacter);
             } else if (vnMap.containsKey(firstCharacter)) {
-                // æ»¡è¶³ Eâ†’S...ï¼ŒSâˆˆvt,FIRST(S)\{Îµ}åŠ å…¥FIRST(E)
+                // Âú×ã E¡úS...£¬S¡Êvt,FIRST(S)\{¦Å}¼ÓÈëFIRST(E)
                 Set<String> s = getFirst(firstCharacter);
-                // FIRST(S)æ˜¯å¦åŒ…å«ç©ºä¸²
+                // FIRST(S)ÊÇ·ñ°üº¬¿Õ´®
                 boolean hasBlankString = false;
                 for(String str:s) {
                     if(!BLANK_STRING.equals(str)) {
@@ -296,9 +296,9 @@ public class GrammarProcessUtil {
                         hasBlankString = true;
                     }
                 }
-                // è®°å½•è¯¥äº§ç”Ÿå¼ç©ºä¸²ä¸ªæ•°
+                // ¼ÇÂ¼¸Ã²úÉúÊ½¿Õ´®¸öÊı
                 int blankStringNumber = hasBlankString ? 1 : 0;
-                // Eâ†’S1S2S3... FIRST(S1)åŒ…å«ç©ºä¸²,åˆ™æ£€æŸ¥ä¸‹ä¸€ä¸ªå­—ç¬¦
+                // E¡úS1S2S3... FIRST(S1)°üº¬¿Õ´®,Ôò¼ì²éÏÂÒ»¸ö×Ö·û
                 while(hasBlankString && index < right.length()
                         && vnMap.containsKey(String.valueOf(right.charAt(index)))) {
                     Set<String> nextFirst = getFirst(String.valueOf(right.charAt(index)));
@@ -312,7 +312,7 @@ public class GrammarProcessUtil {
                     }
                     index++;
                 }
-                // Eâ†’S1S2...Snä¸­çš„æ¯ä¸ªå­—ç¬¦éƒ½å¯ä»¥æ¨å¯¼å‡ºç©ºä¸²ï¼Œç©ºä¸²åŠ å…¥FIRSTé›†
+                // E¡úS1S2...SnÖĞµÄÃ¿¸ö×Ö·û¶¼¿ÉÒÔÍÆµ¼³ö¿Õ´®£¬¿Õ´®¼ÓÈëFIRST¼¯
                 if(blankStringNumber == right.length()) {
                     set.add(BLANK_STRING);
                 }
@@ -323,7 +323,7 @@ public class GrammarProcessUtil {
     }
 
     /**
-     * åˆå§‹åŒ–FOLLOWé›†
+     * ³õÊ¼»¯FOLLOW¼¯
      */
     private static void initFollow() {
         for(String vn:vnList) {
@@ -332,50 +332,50 @@ public class GrammarProcessUtil {
     }
 
     /**
-     * è·å–FOLLOWé›†
+     * »ñÈ¡FOLLOW¼¯
      */
     private static Set<String> getFollow(String vn) {
-        // FOLLOW(vn)å·²ç»å­˜åœ¨ï¼Œç›´æ¥è¿”å›
+        // FOLLOW(vn)ÒÑ¾­´æÔÚ£¬Ö±½Ó·µ»Ø
         if(follow.containsKey(vn) && !follow.get(vn).isEmpty()) return follow.get(vn);
         Set<String> set = new HashSet<>();
-        // æ–‡æ³•å¼€å§‹ç¬¦ï¼Œ#åŠ å…¥FOLLOWé›†
+        // ÎÄ·¨¿ªÊ¼·û£¬#¼ÓÈëFOLLOW¼¯
         if(vnList.get(0).equals(vn)) {
             set.add("#");
         }
-        // æŸ¥çœ‹vnåœ¨å“ªæ¡äº§ç”Ÿå¼çš„å³éƒ¨å‡ºç°è¿‡
+        // ²é¿´vnÔÚÄÄÌõ²úÉúÊ½µÄÓÒ²¿³öÏÖ¹ı
         for(String left:vnList) {
-            // è‡ªå·±çš„FOLLOWé›†ä¸ç”¨ç®¡
+            // ×Ô¼ºµÄFOLLOW¼¯²»ÓÃ¹Ü
             if(left.equals(vn)) {
                 continue;
             }
-            // è·å–vnå¯¹åº”çš„äº§ç”Ÿå¼
+            // »ñÈ¡vn¶ÔÓ¦µÄ²úÉúÊ½
             List<String> vnRight = productionMap.get(left);
             for(String item:vnRight) {
                 int index = contains(item,vn);
-                // åœ¨äº§ç”Ÿå¼å³éƒ¨å‡ºç°è¿‡
+                // ÔÚ²úÉúÊ½ÓÒ²¿³öÏÖ¹ı
                 if(index != -1) {
-                    // è¿™æ ·åšæ˜¯ä¸ºäº†è¯†åˆ« E'
+                    // ÕâÑù×öÊÇÎªÁËÊ¶±ğ E'
                     if(index + vn.length() == item.length()) {
-                        // leftâ†’...S Så‡ºç°åœ¨äº§ç”Ÿå¼æœ€å³éƒ¨ï¼Œä½¿ç”¨è§„åˆ™ä¸‰ï¼Œå°†FOLLOW(left)åŠ å…¥FOLLOW(S)
+                        // left¡ú...S S³öÏÖÔÚ²úÉúÊ½×îÓÒ²¿£¬Ê¹ÓÃ¹æÔòÈı£¬½«FOLLOW(left)¼ÓÈëFOLLOW(S)
                         Set<String> itemFollow = getFollow(left);
                         set.addAll(itemFollow);
                     } else {
-                        // å¦åˆ™ä½¿ç”¨è§„åˆ™äºŒ
-                        // è·å–nextï¼Œè¿™é‡Œè¦å¤„ç†E'
+                        // ·ñÔòÊ¹ÓÃ¹æÔò¶ş
+                        // »ñÈ¡next£¬ÕâÀïÒª´¦ÀíE'
                         String next = null;
                         int e1 = index + vn.length();
                         if(e1 + 1< item.length() && item.charAt(e1+1) == '\'') {
-                            // SE',ä¸‹ä¸€ä¸ªå­—ç¬¦å¸¦å•å¼•å·
+                            // SE',ÏÂÒ»¸ö×Ö·û´øµ¥ÒıºÅ
                             next = item.substring(e1,e1+2);
                         } else {
-                            // SE,ä¸‹ä¸€ä¸ªå­—ç¬¦ä¸å¸¦å•å¼•å·
+                            // SE,ÏÂÒ»¸ö×Ö·û²»´øµ¥ÒıºÅ
                             next = item.substring(e1,e1+1);
                         }
                         if(vtMap.containsKey(next)) {
-                            // å¦‚æœnextæ˜¯ç»ˆç»“ç¬¦ï¼Œåˆ™FIRST(next) = {next}ï¼Œç›´æ¥åŠ å…¥
+                            // Èç¹ûnextÊÇÖÕ½á·û£¬ÔòFIRST(next) = {next}£¬Ö±½Ó¼ÓÈë
                             set.add(next);
                         } else {
-                            // FIRST(next)\{Îµ}åŠ å…¥FOLLOW(vn)
+                            // FIRST(next)\{¦Å}¼ÓÈëFOLLOW(vn)
                             Set<String> first = getFirst(next);
                             boolean hasBlankString = first.contains(BLANK_STRING);
                             for(String s:first) {
@@ -383,7 +383,7 @@ public class GrammarProcessUtil {
                                     set.add(s);
                                 }
                             }
-                            // FIRST(next)å«æœ‰Îµï¼Œä½¿ç”¨è§„åˆ™ä¸‰
+                            // FIRST(next)º¬ÓĞ¦Å£¬Ê¹ÓÃ¹æÔòÈı
                             if(hasBlankString && !next.equals(vn)) {
                                 Set<String> follow = getFollow(next);
                                 set.addAll(follow);
@@ -398,13 +398,13 @@ public class GrammarProcessUtil {
     }
 
     /**
-     * å°†vnä¸vtå¯¹åº”çš„äº§ç”Ÿå¼å­˜å…¥åˆ†æè¡¨
+     * ½«vnÓëvt¶ÔÓ¦µÄ²úÉúÊ½´æÈë·ÖÎö±í
      */
     private static void fillTable(String vn,String vt,String production) {
         if(table == null) {
-            throw new IllegalStateException("è°ƒç”¨fillTableå‰è¯·ç¡®ä¿tableå·²åˆå§‹åŒ–ï¼");
+            throw new IllegalStateException("µ÷ÓÃfillTableÇ°ÇëÈ·±£tableÒÑ³õÊ¼»¯£¡");
         }
-        // è·å–vnä¸vtåˆ†åˆ«åœ¨vnListä¸vtListçš„ä¸‹æ ‡
+        // »ñÈ¡vnÓëvt·Ö±ğÔÚvnListÓëvtListµÄÏÂ±ê
         int vnIndex = vnMap.getOrDefault(vn,-1);
         int vtIndex = -1;
         if("#".equals(vt)) {
@@ -413,17 +413,17 @@ public class GrammarProcessUtil {
             vtIndex = vtMap.getOrDefault(vt, -1);
         }
         if(vnIndex == -1 || vtIndex == -1) {
-            throw new IllegalArgumentException("fillTable(vn="+vn+",vt="+vt+",production="+production+")ä¸åˆæ³•");
+            throw new IllegalArgumentException("fillTable(vn="+vn+",vt="+vt+",production="+production+")²»ºÏ·¨");
         }
-        // æ‹¼æ¥äº§ç”Ÿå¼
+        // Æ´½Ó²úÉúÊ½
         String trueProduction = vn+SEPARATOR+production;
-        // å­˜å…¥åˆ†æè¡¨
+        // ´æÈë·ÖÎö±í
         table[vnIndex][vtIndex] = trueProduction;
     }
 
     /**
-     * è¿”å›vnå¯¹åº”çš„äº§ç”Ÿå¼ï¼Œä¸”äº§ç”Ÿå¼ä¸­åŒ…å«vt
-     * ä¾‹ï¼šEâ†’iESS'|a,vn:E,vt:i => iESS'
+     * ·µ»Øvn¶ÔÓ¦µÄ²úÉúÊ½£¬ÇÒ²úÉúÊ½ÖĞ°üº¬vt
+     * Àı£ºE¡úiESS'|a,vn:E,vt:i => iESS'
      */
     private static String findProduction(String vn,String vt) {
         List<String> list = productionMap.get(vn);
@@ -436,18 +436,18 @@ public class GrammarProcessUtil {
     }
 
     /**
-     * è·å–åˆ†æè¡¨
-     * å‰æï¼šFIRSTé›†ä¸FOLLOWé›†å·²æ„é€ å®Œæˆ
+     * »ñÈ¡·ÖÎö±í
+     * Ç°Ìá£ºFIRST¼¯ÓëFOLLOW¼¯ÒÑ¹¹ÔìÍê³É
      */
     private static String[][] getTable() {
         if(table != null)
             return table;
         table = new String[vnList.size()][vtList.size()+1];
-        // éå†éç»ˆç»“ç¬¦
+        // ±éÀú·ÇÖÕ½á·û
         for(String vn:vnList) {
-            // è·å–å¯¹åº”éç»ˆç»“ç¬¦çš„FIRSTé›†
+            // »ñÈ¡¶ÔÓ¦·ÇÖÕ½á·ûµÄFIRST¼¯
             Set<String> vnFirst = first.get(vn);
-            // å¯¹äºFIRSTé›†çš„æ¯ä¸€ä¸ªå…ƒç´ ï¼Œæ‰¾åˆ°å¯¹åº”äº§ç”Ÿå¼ï¼ŒåŠ å…¥åˆ†æè¡¨
+            // ¶ÔÓÚFIRST¼¯µÄÃ¿Ò»¸öÔªËØ£¬ÕÒµ½¶ÔÓ¦²úÉúÊ½£¬¼ÓÈë·ÖÎö±í
             for(String vt:vnFirst) {
                 if(!BLANK_STRING.equals(vt)) {
                     String production;
@@ -459,7 +459,7 @@ public class GrammarProcessUtil {
                     fillTable(vn, vt, production);
                 }
             }
-            // FIRSTé›†åŒ…å«ç©ºä¸²ï¼Œåˆ™FOLLOWé›†åŠ å…¥
+            // FIRST¼¯°üº¬¿Õ´®£¬ÔòFOLLOW¼¯¼ÓÈë
             if(vnFirst.contains(BLANK_STRING)) {
                 Set<String> vnFollow = follow.get(vn);
                 for(String vt:vnFollow) {
@@ -471,11 +471,11 @@ public class GrammarProcessUtil {
     }
 
     /**
-     * æ ¹æ®éç»ˆç»“ç¬¦ä¸ç»ˆç»“ç¬¦è·å–åˆ†æè¡¨ä¸­çš„äº§ç”Ÿå¼
+     * ¸ù¾İ·ÇÖÕ½á·ûÓëÖÕ½á·û»ñÈ¡·ÖÎö±íÖĞµÄ²úÉúÊ½
      */
     public String get(String vn,String vt) {
         if(table == null) {
-            throw new IllegalStateException("è°ƒç”¨fillTableå‰è¯·ç¡®ä¿tableå·²åˆå§‹åŒ–ï¼");
+            throw new IllegalStateException("µ÷ÓÃfillTableÇ°ÇëÈ·±£tableÒÑ³õÊ¼»¯£¡");
         }
         int vnIndex = vnMap.getOrDefault(vn,-1);
         int vtIndex = -1;
@@ -491,50 +491,50 @@ public class GrammarProcessUtil {
     }
 
     /**
-     * è·å–æ–‡æ³•å¼€å§‹ç¬¦
+     * »ñÈ¡ÎÄ·¨¿ªÊ¼·û
      */
     public String getGrammarStart() {
         return vnList.get(0);
     }
 
     /**
-     * æ ¹æ®ä¸€ä¸ªéç»ˆç»“ç¬¦ä¸ç»ˆç»“ç¬¦è·å–äº§ç”Ÿå¼
+     * ¸ù¾İÒ»¸ö·ÇÖÕ½á·ûÓëÖÕ½á·û»ñÈ¡²úÉúÊ½
      */
     public String getProduction(String vn,String vt) {
         return get(vn,vt);
     }
 
     /**
-     * æ£€æŸ¥è¯­æ³•
+     * ¼ì²éÓï·¨
      */
     public boolean check(String str) {
-        // å®ç°ä¸­ç¼€å¼çš„è¯­æ³•æ£€æŸ¥é€»è¾‘
+        // ÊµÏÖÖĞ×ºÊ½µÄÓï·¨¼ì²éÂß¼­
         printTitle(str);
-        // åˆå§‹æ—¶ # ä¸ æ–‡æ³•å¼€å§‹ç¬¦å‹ç¬¦å·æ ˆ
+        // ³õÊ¼Ê± # Óë ÎÄ·¨¿ªÊ¼·ûÑ¹·ûºÅÕ»
         Deque<String> stack = new LinkedList<>();
         stack.push("#");
         stack.push(getGrammarStart());
-        // è¾“å…¥ä¸²çš„ä¸‹ä¸€ä¸ªä½ç½®
+        // ÊäÈë´®µÄÏÂÒ»¸öÎ»ÖÃ
         int i = 0;
         int errorPosition = i - 1;
-        // è¾“å…¥ä¸²å½“å‰æŒ‡å‘çš„å­—ç¬¦
+        // ÊäÈë´®µ±Ç°Ö¸ÏòµÄ×Ö·û
         String cur = String.valueOf(str.charAt(i++));
-        // æ ˆé¡¶ç¬¦å·
+        // Õ»¶¥·ûºÅ
         String top;
         do{
-            // æ‰“å°
+            // ´òÓ¡
             print(stack,str,i,cur);
             top = stack.pop();
             if(top.equals("#") && cur.equals("#"))
                 break;
-            // æ ˆé¡¶ç¬¦å· âˆˆ Vtï¼Œåˆ¤æ–­æ ˆé¡¶ä¸è¾“å…¥ä¸²å½“å‰å­—ç¬¦æ˜¯å¦ç›¸ç­‰
+            // Õ»¶¥·ûºÅ ¡Ê Vt£¬ÅĞ¶ÏÕ»¶¥ÓëÊäÈë´®µ±Ç°×Ö·ûÊÇ·ñÏàµÈ
             if(containsVt(top)) {
-                // x == a != "#"ï¼Œåˆ™å­—ç¬¦ä¸²æŒ‡é’ˆç§»åŠ¨
+                // x == a != "#"£¬Ôò×Ö·û´®Ö¸ÕëÒÆ¶¯
                 if(top.equalsIgnoreCase(cur)) {
                     if(!"#".equals(cur)) {
                         cur = "#";
                         Platform.runLater(() -> {
-                            // è¾“å‡ºäº§ç”Ÿå¼
+                            // Êä³ö²úÉúÊ½
                             outputArea.appendText("\n");
                         });
                         if(i < str.length()) {
@@ -549,31 +549,31 @@ public class GrammarProcessUtil {
                     return false;
                 }
             }
-            /*è¾“å…¥ä¸²å½“å‰å­—ç¬¦ä¸ä¸º # */
+            /*ÊäÈë´®µ±Ç°×Ö·û²»Îª # */
             else {
-                // æ ¹æ®æ ˆé¡¶æŸ¥è¡¨
+                // ¸ù¾İÕ»¶¥²é±í
                 String t = getProduction(top,cur);
-                // æ‰¾ä¸åˆ°ï¼Œè¯†åˆ«å¤±è´¥
+                // ÕÒ²»µ½£¬Ê¶±ğÊ§°Ü
                 if(t == null) {
-                    // è¯†åˆ«å¤±è´¥
+                    // Ê¶±ğÊ§°Ü
                     InfixCalculator.setErrorPosition(errorPosition);
                     return false;
                 }
                 Platform.runLater(() -> {
-                    // è¾“å‡ºäº§ç”Ÿå¼
+                    // Êä³ö²úÉúÊ½
                     outputArea.appendText(padWhitespaceRight(t,8) + "\n");
                 });
-                // è·å–äº§ç”Ÿå¼çš„å³éƒ¨
-                String sentence = t.split("â†’")[1];
-                // å°†äº§ç”Ÿå¼çš„å³éƒ¨é€†åºå‹æ ˆ
+                // »ñÈ¡²úÉúÊ½µÄÓÒ²¿
+                String sentence = t.split("¡ú")[1];
+                // ½«²úÉúÊ½µÄÓÒ²¿ÄæĞòÑ¹Õ»
                 int end = sentence.length();
                 for(int start = sentence.length()-1; start >= 0; start--) {
                     if(sentence.charAt(start) == '\'') {
                         continue;
                     } else {
                         String substring = sentence.substring(start, end);
-                        // Îµä¸å‹æ ˆ
-                        if(!"Îµ".equals(substring)) {
+                        // ¦Å²»Ñ¹Õ»
+                        if(!"¦Å".equals(substring)) {
                             stack.push(substring);
                             end = start;
                         }
@@ -586,9 +586,9 @@ public class GrammarProcessUtil {
 
     private void printTitle(String str) {
         Platform.runLater(() -> {
-            outputArea.appendText("\n\n" + str + "è§£ææµç¨‹ï¼š\n\n");
+            outputArea.appendText("\n\n" + str + "½âÎöÁ÷³Ì£º\n\n");
             int len = str.length() + 3;
-            String[] titles = new String[] {"ç¬¦å·æ ˆ","å½“å‰è¾“å…¥ç¬¦å·\t","è¾“å…¥ä¸²","æ‰€ç”¨äº§ç”Ÿå¼"};
+            String[] titles = new String[] {"·ûºÅÕ»","µ±Ç°ÊäÈë·ûºÅ\t","ÊäÈë´®","ËùÓÃ²úÉúÊ½"};
             for(String s:titles) {
                 outputArea.appendText(padWhitespaceRight(s,len));
             }
@@ -599,55 +599,55 @@ public class GrammarProcessUtil {
     private void print(Deque<String> stack, String str, int i, String cur) {
         int len = str.length() + 10;
         StringBuilder sb = new StringBuilder();
-        // æ‹¼æ¥æ ˆå†…çš„ç¬¦å·
+        // Æ´½ÓÕ»ÄÚµÄ·ûºÅ
         Iterator<String> iterator = stack.descendingIterator();
         while(iterator.hasNext()) {
             sb.append(iterator.next());
         }
         Platform.runLater(() -> {
-            // è¾“å‡ºæ ˆ
+            // Êä³öÕ»
             outputArea.appendText(padWhitespaceRight(sb.toString(),len));
 
-            // è¾“å‡ºå½“å‰è¾“å…¥ç¬¦å·
+            // Êä³öµ±Ç°ÊäÈë·ûºÅ
             outputArea.appendText(padWhitespaceLeft(cur,len) + "\t");
 
-            // è¾“å‡ºè¾“å…¥ä¸²
-            // åˆ›å»ºä¸€ä¸ª StringBuilder å¯¹è±¡ç”¨äºæ„å»ºè¾“å‡ºå­—ç¬¦ä¸²
+            // Êä³öÊäÈë´®
+            // ´´½¨Ò»¸ö StringBuilder ¶ÔÏóÓÃÓÚ¹¹½¨Êä³ö×Ö·û´®
             StringBuilder outputBuilder = new StringBuilder();
-            // åˆ¤æ–­æ˜¯å¦è¿˜æœ‰è¾“å…¥ä¸²çš„å­—ç¬¦éœ€è¦è¾“å‡º
+            // ÅĞ¶ÏÊÇ·ñ»¹ÓĞÊäÈë´®µÄ×Ö·ûĞèÒªÊä³ö
             if (i < str.length()) {
-                // è·å–éœ€è¦è¾“å‡ºçš„å­—ç¬¦ä¸²ï¼Œå¹¶è¿›è¡Œå¯¹é½å¤„ç†
+                // »ñÈ¡ĞèÒªÊä³öµÄ×Ö·û´®£¬²¢½øĞĞ¶ÔÆë´¦Àí
                 String substring = padWhitespaceRight(str.substring(i - 1), len);
-                // æ·»åŠ å¯¹é½åçš„å­—ç¬¦ä¸²
+                // Ìí¼Ó¶ÔÆëºóµÄ×Ö·û´®
                 outputBuilder.append(substring);
             } else {
-                // æ·»åŠ å¯¹é½çš„ "#" å­—ç¬¦ä¸²
+                // Ìí¼Ó¶ÔÆëµÄ "#" ×Ö·û´®
                 outputBuilder.append(padWhitespaceRight("#", len));
             }
-            // å°†æ„å»ºå¥½çš„å­—ç¬¦ä¸²è¿½åŠ åˆ° outputArea ä¸­
+            // ½«¹¹½¨ºÃµÄ×Ö·û´®×·¼Óµ½ outputArea ÖĞ
             outputArea.appendText(" " + outputBuilder.toString());
         });
     }
 
     /**
-     * å³å¯¹é½
+     * ÓÒ¶ÔÆë
      */
     public static String padWhitespaceLeft(String s, int len) {
         return String.format("%1$" + len + "s", s);
     }
 
     /**
-     * å·¦å¯¹é½
+     * ×ó¶ÔÆë
      */
     public static String padWhitespaceRight(String s, int len) {
         return String.format("%1$-" + len + "s", s);
     }
 //    public static void main(String[] args) {
-//        // å¯ä»¥åœ¨è¿™é‡Œä½¿ç”¨ vnMapã€vnListã€productionMapã€vtMapã€vtList
-//        System.out.println("éç»ˆç»“ç¬¦ï¼š" + vnList);
-//        System.out.println("ä¿å­˜éç»ˆç»“ç¬¦åœ¨vnListä¸­çš„ä½ç½®ï¼š" + vnMap);
-//        System.out.println("ä¿å­˜éç»ˆç»“ç¬¦çš„äº§ç”Ÿå¼ï¼š" + productionMap);
-//        System.out.println("ç»ˆç»“ç¬¦ï¼š" + vtList);
-//        System.out.println("ä¿å­˜ç»ˆç»“ç¬¦åœ¨vtListä¸­çš„ä½ç½®ï¼š" + vtMap);
+//        // ¿ÉÒÔÔÚÕâÀïÊ¹ÓÃ vnMap¡¢vnList¡¢productionMap¡¢vtMap¡¢vtList
+//        System.out.println("·ÇÖÕ½á·û£º" + vnList);
+//        System.out.println("±£´æ·ÇÖÕ½á·ûÔÚvnListÖĞµÄÎ»ÖÃ£º" + vnMap);
+//        System.out.println("±£´æ·ÇÖÕ½á·ûµÄ²úÉúÊ½£º" + productionMap);
+//        System.out.println("ÖÕ½á·û£º" + vtList);
+//        System.out.println("±£´æÖÕ½á·ûÔÚvtListÖĞµÄÎ»ÖÃ£º" + vtMap);
 //    }
 }

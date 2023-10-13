@@ -18,30 +18,30 @@ public class InfixCalculator extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("ä¸­ç¼€è¡¨è¾¾å¼è®¡ç®—å™¨");
+        primaryStage.setTitle("ÖĞ×º±í´ïÊ½¼ÆËãÆ÷");
 
-        // åˆ›å»ºè¾“å…¥æ¡†å’ŒæŒ‰é’®
-        Label expressionLabel = new Label("ä¸­ç¼€è¡¨è¾¾å¼ï¼š");
+        // ´´½¨ÊäÈë¿òºÍ°´Å¥
+        Label expressionLabel = new Label("ÖĞ×º±í´ïÊ½£º");
         infixExpressionField = new TextField();
-        Button evaluateButton = new Button("è®¡ç®—");
+        Button evaluateButton = new Button("¼ÆËã");
 
-        // åˆ›å»ºè¾“å‡ºåŒºåŸŸ
-        Label outputLabel = new Label("è¾“å‡ºï¼š");
+        // ´´½¨Êä³öÇøÓò
+        Label outputLabel = new Label("Êä³ö£º");
         outputArea = new TextArea();
         outputArea.setEditable(false);
 
-        // è®¾ç½®æŒ‰é’®çš„ç‚¹å‡»äº‹ä»¶
+        // ÉèÖÃ°´Å¥µÄµã»÷ÊÂ¼ş
         evaluateButton.setOnAction(e -> evaluateInfixExpression());
 
-        // åˆ›å»ºå¸ƒå±€å¹¶æ·»åŠ æ§ä»¶
+        // ´´½¨²¼¾Ö²¢Ìí¼Ó¿Ø¼ş
         VBox root = new VBox();
         root.setSpacing(10);
         root.setPadding(new Insets(10));
-        // å°†è¾“å‡ºåŒºåŸŸæ”¾ç½®åœ¨æ»šåŠ¨é¢æ¿ä¸­
+        // ½«Êä³öÇøÓò·ÅÖÃÔÚ¹ö¶¯Ãæ°åÖĞ
         ScrollPane outputScrollPane = new ScrollPane(outputArea);
         outputScrollPane.setFitToWidth(true);
         outputScrollPane.setFitToHeight(true);
-        // è®¾ç½®è¾“å‡ºåŒºåŸŸçš„å‚ç›´å¢é•¿ç­–ç•¥
+        // ÉèÖÃÊä³öÇøÓòµÄ´¹Ö±Ôö³¤²ßÂÔ
         VBox.setVgrow(outputScrollPane, Priority.ALWAYS);
         root.getChildren().addAll(expressionLabel, infixExpressionField, evaluateButton, outputLabel, outputScrollPane);
 
@@ -58,33 +58,33 @@ public class InfixCalculator extends Application {
     private void evaluateInfixExpression() {
         String infixExpression = infixExpressionField.getText();
 
-        // Step 1: ä¸­ç¼€å¼é”™è¯¯æ£€æŸ¥
+        // Step 1: ÖĞ×ºÊ½´íÎó¼ì²é
         GrammarProcessUtil grammarProcess = new GrammarProcessUtil (outputArea);
 
         boolean check = grammarProcess.check(infixExpression);
         Platform.runLater(() -> {
             if (check) {
-                outputArea.appendText("\næ£€æŸ¥ç»“æœï¼š" + check);
+                outputArea.appendText("\n¼ì²é½á¹û£º" + check);
             }
             else {
-                outputArea.appendText("\næ£€æŸ¥ç»“æœï¼š" + check);
-                outputArea.appendText("\né”™è¯¯ä½ç½®ï¼š" + errorPosition);
+                outputArea.appendText("\n¼ì²é½á¹û£º" + check);
+                outputArea.appendText("\n´íÎóÎ»ÖÃ£º" + errorPosition);
             }
         });
 
-        // Step 2: ä¸­ç¼€å¼ç¿»è¯‘ä¸ºé€†æ³¢å…°å¼
+        // Step 2: ÖĞ×ºÊ½·­ÒëÎªÄæ²¨À¼Ê½
         String postfixExpression = infixToPostfix(infixExpression);
-        outputArea.setText("é€†æ³¢å…°å¼ï¼š" + postfixExpression + "\n");
+        outputArea.setText("Äæ²¨À¼Ê½£º" + postfixExpression + "\n");
 
-        // Step 3: é€†æ³¢å…°å¼çš„æ±‚å€¼
+        // Step 3: Äæ²¨À¼Ê½µÄÇóÖµ
         double result = evaluatePostfixExpression(postfixExpression);
 //        int intValue = (int) result;
-        outputArea.appendText("\nè®¡ç®—ç»“æœï¼š" + result + "\n");
+        outputArea.appendText("\n¼ÆËã½á¹û£º" + result + "\n");
     }
 
 
     private String infixToPostfix(String infixExpression) {
-        // å®ç°ä¸­ç¼€è¡¨è¾¾å¼åˆ°é€†æ³¢å…°å¼çš„è½¬æ¢é€»è¾‘
+        // ÊµÏÖÖĞ×º±í´ïÊ½µ½Äæ²¨À¼Ê½µÄ×ª»»Âß¼­
         StringBuilder postfixExpression = new StringBuilder();
         Stack<Character> stack = new Stack<>();
 
@@ -105,7 +105,7 @@ public class InfixCalculator extends Application {
                     postfixExpression.append(stack.pop());
                 }
                 if (!stack.isEmpty() && stack.peek() == '(') {
-                    stack.pop(); // å¼¹å‡ºå·¦æ‹¬å·
+                    stack.pop(); // µ¯³ö×óÀ¨ºÅ
                 }
             }
         }
@@ -122,12 +122,12 @@ public class InfixCalculator extends Application {
     }
 
     private boolean isOperand(char c) {
-        // æ£€æŸ¥å­—ç¬¦æ˜¯å¦ä¸ºæ“ä½œæ•°ï¼ˆæ•°å­—æˆ–å­—æ¯ç­‰ï¼‰
+        // ¼ì²é×Ö·ûÊÇ·ñÎª²Ù×÷Êı£¨Êı×Ö»ò×ÖÄ¸µÈ£©
         return Character.isLetterOrDigit(c);
     }
 
     private int getPrecedence(char operator) {
-        // è¿”å›è¿ç®—ç¬¦çš„ä¼˜å…ˆçº§
+        // ·µ»ØÔËËã·ûµÄÓÅÏÈ¼¶
         if (operator == '+' || operator == '-') {
             return 1;
         } else if (operator == '*' || operator == '/') {
@@ -138,7 +138,7 @@ public class InfixCalculator extends Application {
     }
 
     private boolean hasHigherPrecedence(char operator1, char operator2) {
-        // æ£€æŸ¥operator1çš„ä¼˜å…ˆçº§æ˜¯å¦é«˜äºoperator2
+        // ¼ì²éoperator1µÄÓÅÏÈ¼¶ÊÇ·ñ¸ßÓÚoperator2
         int precedence1 = getPrecedence(operator1);
         int precedence2 = getPrecedence(operator2);
         return precedence1 >= precedence2;
@@ -146,18 +146,18 @@ public class InfixCalculator extends Application {
 
 
     private double evaluatePostfixExpression(String postfixExpression) {
-        // å®ç°é€†æ³¢å…°å¼çš„æ±‚å€¼é€»è¾‘
+        // ÊµÏÖÄæ²¨À¼Ê½µÄÇóÖµÂß¼­
         Stack<Double> stack = new Stack<>();
 
         for (int i = 0; i < postfixExpression.length(); i++) {
             char c = postfixExpression.charAt(i);
 
             if (isOperand(c)) {
-                // å¦‚æœæ˜¯æ“ä½œæ•°ï¼Œå°†å…¶è½¬æ¢ä¸ºæ•°å­—å¹¶æ¨å…¥æ ˆä¸­
+                // Èç¹ûÊÇ²Ù×÷Êı£¬½«Æä×ª»»ÎªÊı×Ö²¢ÍÆÈëÕ»ÖĞ
                 double operand = Double.parseDouble(String.valueOf(c));
                 stack.push(operand);
             } else if (isOperator(c)) {
-                // å¦‚æœæ˜¯è¿ç®—ç¬¦ï¼Œä»æ ˆä¸­å¼¹å‡ºä¸¤ä¸ªæ“ä½œæ•°è¿›è¡Œè¿ç®—ï¼Œå¹¶å°†ç»“æœæ¨å…¥æ ˆä¸­
+                // Èç¹ûÊÇÔËËã·û£¬´ÓÕ»ÖĞµ¯³öÁ½¸ö²Ù×÷Êı½øĞĞÔËËã£¬²¢½«½á¹ûÍÆÈëÕ»ÖĞ
                 double operand2 = stack.pop();
                 double operand1 = stack.pop();
                 double result = performOperation(operand1, operand2, c);
@@ -169,7 +169,7 @@ public class InfixCalculator extends Application {
     }
 
     private double performOperation(double operand1, double operand2, char operator) {
-        // æ ¹æ®è¿ç®—ç¬¦æ‰§è¡Œç›¸åº”çš„è¿ç®—
+        // ¸ù¾İÔËËã·ûÖ´ĞĞÏàÓ¦µÄÔËËã
         switch (operator) {
             case '+':
                 return operand1 + operand2;
